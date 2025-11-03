@@ -4,9 +4,11 @@ require('dotenv').config();
 // 2. Importar las librerías
 const express = require('express');
 const { Pool } = require('pg'); // Importar el conector de PostgreSQL
+const cors = require('cors'); // <--- AÑADE ESTA LÍNEA
 
 // 3. Crear la aplicación Express
 const app = express();
+app.use(cors()); // <--- AÑADE ESTA LÍNEA TAMBIÉN
 // Usar el puerto de Render o el 3000 si es local
 const port = process.env.PORT || 3000;
 
