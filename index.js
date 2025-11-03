@@ -23,7 +23,7 @@ connectionString: process.env.DATABASE_URL,
 
 // 5. Crear una ruta de prueba (Homepage)
 app.get('/', (req, res) => {
-  res.send('¡API de la Tienda de Don José funcionando!');
+  res.send('hola mel');
 });
 
 // 6. ***** ¡LA RUTA DE PRUEBA DE CONEXIÓN! *****
