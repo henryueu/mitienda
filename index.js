@@ -14,8 +14,13 @@ const port = process.env.PORT || 3000;
 console.log('La URL de conexión es:', process.env.DATABASE_URL);
 // 'Pool' maneja múltiples conexiones eficientemente.
 const pool = new Pool({
-  // Lee la URL de conexión desde el archivo .env
   connectionString: process.env.DATABASE_URL,
+  // --- AÑADE ESTAS DOS OPCIONES ---
+  family: 4, // 1. Forzar el uso de IPv4
+  ssl: {     // 2. Re-habilitar SSL para Render
+    rejectUnauthorized: false
+  }
+  // ---------------------------------
 });
 
 // 5. Crear una ruta de prueba (Homepage)
