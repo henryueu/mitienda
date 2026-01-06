@@ -17,7 +17,7 @@ const Proveedor = sequelize.define('Proveedor', {
   codigo_postal: DataTypes.STRING,
   telefono: DataTypes.STRING
 }, {
-  tableName: 'PROVEEDOR',
+  tableName: 'proveedor',
   timestamps: false
 });
 

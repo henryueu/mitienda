@@ -18,7 +18,7 @@ const Categoria = sequelize.define('Categoria', {
     // allow_null es true por defecto, así que no es obligatorio ponerlo
   }
 }, {
-  tableName: 'CATEGORIA', // ¡Importante! El nombre real de la tabla en tu BD (puede ser mayúsculas o minúsculas)
+  tableName: 'categoria', // ¡Importante! El nombre real de la tabla en tu BD (puede ser mayúsculas o minúsculas)
   timestamps: false       // Le decimos que no busque columnas createdAt/updatedAt
 });
 
