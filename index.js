@@ -24,9 +24,20 @@ app.use(cors());
 app.use(express.json());
 
 // 2. VERIFICAR CONEXIÓN Y SINCRONIZAR MODELOS
-sequelize.sync({ force: false }) // force: false evita borrar las tablas si ya existen
-  .then(() => {
-    console.log('✅ Conexión a Base de Datos y Modelos sincronizados correctamente.');
+// ¡OJO! force: true borra las tablas viejas y las crea nuevas corregidas
+sequelize.sync({ force: true }) 
+  .then(async () => {
+    console.log('✅ Base de Datos sincronizada y reparada.');
+    
+    // ESTO CREA AL ADMIN AUTOMÁTICAMENTE PARA QUE PUEDAS ENTRAR
+    await Usuario.findOrCreate({
+      where: { username: 'admin_jose' },
+      defaults: {
+        password_hash: 'test1234',
+        rol: 'Administrador'
+      }
+    });
+    console.log('👤 Usuario Admin creado/asegurado.');
   })
   .catch(err => {
     console.error('❌ Error al conectar a la Base de Datos:', err);
