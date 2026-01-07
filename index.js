@@ -25,7 +25,7 @@ app.use(express.json());
 
 // 2. VERIFICAR CONEXIÓN Y SINCRONIZAR MODELOS
 // ¡OJO! force: true borra las tablas viejas y las crea nuevas corregidas
-sequelize.sync({ force: true }) 
+sequelize.sync({ force: false }) 
   .then(async () => {
     console.log('✅ Base de Datos sincronizada y reparada.');
     
