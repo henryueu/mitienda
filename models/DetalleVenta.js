@@ -36,7 +36,7 @@ const DetalleVenta = sequelize.define('DetalleVenta', {
   timestamps: false
 });
 
-// Relaciones: Una Venta tiene muchos Detalles
+
 Venta.hasMany(DetalleVenta, { foreignKey: 'id_venta' });
 DetalleVenta.belongsTo(Venta, { foreignKey: 'id_venta' });
 

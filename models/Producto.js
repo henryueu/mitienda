@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../database');
-const Categoria = require('./Categoria'); // Importamos Categoria para la relación
+const Categoria = require('./Categoria'); 
 
 const Producto = sequelize.define('Producto', {
   id_producto: {
@@ -23,7 +23,7 @@ const Producto = sequelize.define('Producto', {
   },
   id_categoria: {
     type: DataTypes.INTEGER,
-    // Esto es la FK
+ 
     references: {
       model: Categoria,
       key: 'id_categoria'
@@ -34,7 +34,6 @@ const Producto = sequelize.define('Producto', {
   timestamps: false
 });
 
-// Definimos la relación: Un Producto "pertenece a" una Categoria
 Producto.belongsTo(Categoria, { foreignKey: 'id_categoria' });
 Categoria.hasMany(Producto, { foreignKey: 'id_categoria' });
 

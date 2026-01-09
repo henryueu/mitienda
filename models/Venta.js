@@ -9,7 +9,7 @@ const Venta = sequelize.define('Venta', {
   },
   fecha: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW // Guarda la fecha/hora actual automáticamente
+    defaultValue: DataTypes.NOW 
   },
   monto_total: {
     type: DataTypes.DECIMAL(10, 2),
