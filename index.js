@@ -148,7 +148,6 @@ app.post('/api/login', async (req, res) => {
 // PRODUCTOS 
 app.get('/api/productos', async (req, res) => {
   try {
-
     const productos = await Producto.findAll({
       include: {
         model: Categoria,
@@ -156,14 +155,21 @@ app.get('/api/productos', async (req, res) => {
       }
     });
     
-    const respuesta = productos.map(p => ({
-      id_producto: p.id_producto,
-      nombre_producto: p.nombre_producto,
-      marca: p.marca,
-      precio_venta: p.precio_venta,
-      stock: p.stock,
-      nombre_categoria: p.Categoria ? p.Categoria.nombre_categoria : 'Sin categoría'
-    }));
+    const respuesta = productos.map(p => {
+      // Intentamos obtener el nombre buscando en 'Categoria' o 'categoria'
+      const cat = p.Categoria || p.categoria;
+      
+      return {
+        id_producto: p.id_producto,
+        nombre_producto: p.nombre_producto,
+        marca: p.marca,
+        precio_venta: p.precio_venta,
+        stock: p.stock,
+        // --- LOS DOS CAMBIOS CLAVE ---
+        id_categoria: p.id_categoria, // 1. Faltaba pasar este ID al frontend
+        nombre_categoria: cat ? cat.nombre_categoria : 'Sin categoría' // 2. Verificación robusta
+      };
+    });
 
     res.json(respuesta);
   } catch (err) {
