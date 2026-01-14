@@ -15,10 +15,15 @@ const app = express();
 const port = process.env.PORT || 3000;
 const SECRET_KEY = 'mi_secreto_super_seguro'; 
 
+// --- ASOCIACIONES EXISTENTES ---
 Producto.hasMany(DetalleVenta, { foreignKey: 'id_producto' });
 DetalleVenta.belongsTo(Producto, { foreignKey: 'id_producto' });
 
-// Relación Categoria <-> Producto (La que arregló el "Sin categoría")
+// --- AGREGA ESTAS DOS LÍNEAS (LAS QUE FALTAN) ---
+Venta.hasMany(DetalleVenta, { foreignKey: 'id_venta' });
+DetalleVenta.belongsTo(Venta, { foreignKey: 'id_venta' });
+
+// Relación Categoria <-> Producto
 Categoria.hasMany(Producto, { foreignKey: 'id_categoria' });
 Producto.belongsTo(Categoria, { foreignKey: 'id_categoria' });
 
