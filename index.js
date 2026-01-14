@@ -15,33 +15,41 @@ const app = express();
 const port = process.env.PORT || 3000;
 const SECRET_KEY = 'mi_secreto_super_seguro'; 
 
+Producto.hasMany(DetalleVenta, { foreignKey: 'id_producto' });
+DetalleVenta.belongsTo(Producto, { foreignKey: 'id_producto' });
+
+// Relación Categoria <-> Producto (La que arregló el "Sin categoría")
+Categoria.hasMany(Producto, { foreignKey: 'id_categoria' });
+Producto.belongsTo(Categoria, { foreignKey: 'id_categoria' });
+
 app.use(cors());
 app.use(express.json());
 
 app.get('/api/ventas-recientes', async (req, res) => {
   try {
     const ventas = await Venta.findAll({
-      limit: 10, // Solo las últimas 10
-      order: [['fecha_venta', 'DESC']], // La más reciente primero
+      limit: 10,
+      order: [['fecha_venta', 'DESC']],
       include: [{
         model: DetalleVenta,
-        include: [Producto]
+        include: [Producto] // Trae el nombre del producto
       }]
     });
     
-    // Formateamos para que el frontend lo lea fácil
     const respuesta = ventas.map(v => ({
       id_venta: v.id_venta,
       fecha: v.fecha_venta,
       total: v.total_venta,
-      // Unimos los nombres de los productos en una sola cadena
-      productos: v.DetalleVentas.map(d => `${d.cantidad}x ${d.Producto.nombre_producto}`).join(', ')
+      // Usamos opcionales (?.) para evitar errores si algo viene nulo
+      productos: v.DetalleVentas?.map(d => 
+        `${d.cantidad}x ${d.Producto?.nombre_producto || 'Producto'}`
+      ).join(', ') || 'Sin detalles'
     }));
 
     res.json(respuesta);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al obtener historial' });
+    console.error("ERROR CRÍTICO BACKEND:", err); // Esto aparecerá en los logs de Render
+    res.status(500).json({ error: 'Error interno al obtener historial' });
   }
 });
 
