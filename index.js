@@ -18,6 +18,18 @@ const SECRET_KEY = 'mi_secreto_super_seguro';
 app.use(cors());
 app.use(express.json());
 
+// Ruta para obtener los datos de la Vista de stock bajo (reporte para la gráfica)
+app.get('/api/reporte-stock', async (req, res) => {
+    try {
+        // Usamos la instancia de sequelize para consultar la vista que creaste en Neon
+        const [results] = await sequelize.query('SELECT * FROM reporte_inventario_critico');
+        res.json(results);
+    } catch (error) {
+        console.error('Error al obtener el reporte de stock:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
 // VERIFICAR CONEXIÓN Y SINCRONIZAR MODELOS
 sequelize.sync({ force: false }) 
   .then(async () => {
