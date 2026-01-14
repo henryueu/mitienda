@@ -18,6 +18,33 @@ const SECRET_KEY = 'mi_secreto_super_seguro';
 app.use(cors());
 app.use(express.json());
 
+app.get('/api/ventas-recientes', async (req, res) => {
+  try {
+    const ventas = await Venta.findAll({
+      limit: 10, // Solo las últimas 10
+      order: [['fecha_venta', 'DESC']], // La más reciente primero
+      include: [{
+        model: DetalleVenta,
+        include: [Producto]
+      }]
+    });
+    
+    // Formateamos para que el frontend lo lea fácil
+    const respuesta = ventas.map(v => ({
+      id_venta: v.id_venta,
+      fecha: v.fecha_venta,
+      total: v.total_venta,
+      // Unimos los nombres de los productos en una sola cadena
+      productos: v.DetalleVentas.map(d => `${d.cantidad}x ${d.Producto.nombre_producto}`).join(', ')
+    }));
+
+    res.json(respuesta);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener historial' });
+  }
+});
+
 // --- RUTAS PARA REPORTES TEMPORALES (HOY Y SEMANA) ---
 
 // 1. Obtener el total de ventas del día actual (Corte de caja)
