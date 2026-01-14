@@ -18,6 +18,36 @@ const SECRET_KEY = 'mi_secreto_super_seguro';
 app.use(cors());
 app.use(express.json());
 
+// --- RUTAS PARA REPORTES TEMPORALES (HOY Y SEMANA) ---
+
+// 1. Obtener el total de ventas del día actual (Corte de caja)
+app.get('/api/reporte-hoy', async (req, res) => {
+    try {
+        // Filtramos por la fecha actual usando el motor de PostgreSQL
+        const [results] = await sequelize.query(`
+            SELECT COALESCE(SUM(monto_total), 0) as total_hoy 
+            FROM venta 
+            WHERE fecha::date = CURRENT_DATE
+        `);
+        res.json(results[0]);
+    } catch (error) {
+        console.error('Error en reporte diario:', error);
+        res.status(500).json({ error: 'Error al obtener ventas de hoy' });
+    }
+});
+
+// 2. Obtener la tendencia de los últimos 7 días (Gráfica de líneas)
+app.get('/api/reporte-semanal', async (req, res) => {
+    try {
+        // Consultamos la VISTA que creamos anteriormente en Neon
+        const [results] = await sequelize.query('SELECT * FROM reporte_ventas_semanal');
+        res.json(results);
+    } catch (error) {
+        console.error('Error en reporte semanal:', error);
+        res.status(500).json({ error: 'Error al obtener tendencia semanal' });
+    }
+});
+
 // --- RUTAS DE REPORTES PARA EL DASHBOARD ---
 
 // 1. Endpoint para la gráfica de "Top 5 Productos más Vendidos"
