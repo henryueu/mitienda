@@ -18,6 +18,38 @@ const SECRET_KEY = 'mi_secreto_super_seguro';
 app.use(cors());
 app.use(express.json());
 
+// --- RUTAS DE REPORTES PARA EL DASHBOARD ---
+
+// 1. Endpoint para la gráfica de "Top 5 Productos más Vendidos"
+app.get('/api/reporte-top-ventas', async (req, res) => {
+    try {
+        // Consultamos la VISTA que creamos anteriormente en Neon
+        const [results] = await sequelize.query('SELECT * FROM reporte_top_ventas');
+        res.json(results);
+    } catch (error) {
+        console.error('Error en reporte top ventas:', error);
+        res.status(500).json({ error: 'Error al obtener el top de ventas' });
+    }
+});
+
+// 2. Endpoint para los cuadros de "Datos Importantes" (KPIs)
+app.get('/api/reporte-kpis', async (req, res) => {
+    try {
+        // Obtenemos el total de dinero y el número de ventas directamente
+        const [results] = await sequelize.query(`
+            SELECT 
+                COUNT(*) as total_transacciones,
+                COALESCE(SUM(monto_total), 0) as total_ingresos
+            FROM venta
+        `);
+        // Enviamos solo la primera fila con los totales
+        res.json(results[0]);
+    } catch (error) {
+        console.error('Error en reporte KPIs:', error);
+        res.status(500).json({ error: 'Error al obtener indicadores financieros' });
+    }
+});
+
 // Ruta para obtener los datos de la Vista de stock bajo (reporte para la gráfica)
 app.get('/api/reporte-stock', async (req, res) => {
     try {
