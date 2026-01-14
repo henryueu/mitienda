@@ -200,10 +200,6 @@ app.post('/api/ventas', async (req, res) => {
         precio_unitario: item.precio_unitario
       }, { transaction: t });
 
-      const producto = await Producto.findByPk(item.id_producto, { transaction: t });
-      if (producto) {
-        await producto.decrement('stock', { by: item.cantidad, transaction: t });
-      }
     }
 
     await t.commit();
